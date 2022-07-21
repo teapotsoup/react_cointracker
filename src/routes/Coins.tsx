@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
-const Container = styled.div`
+export const Container = styled.div`
   padding: 0px 20px;
   max-width:480px;
   margin: 0 auto;
 `;
 
-const Header = styled.header`
+export const Header = styled.header`
   height: 15vh;
   display: flex;
   justify-content: center;
@@ -18,19 +18,28 @@ const Header = styled.header`
 
 const CoinsList = styled.ul``;
 
-const Loader = styled.h2`
+export const Loader = styled.h2`
     text-align:center;
+    display:block
 `
-
+const Img = styled.img`
+    width:50px;
+    height:50px;
+    margin-right: 10px;
+`
 const Coin = styled.li`
   background-color: white;
   color: ${(props) => props.theme.bgColor};
   border-radius: 15px;
   margin-bottom: 10px;
+  padding:5px;
+  display:flex;
+  align-items: center;
   a {
+    display: flex;
+    align-items: center;
     padding: 20px;
     transition: color 0.2s ease-in;
-    display: block;
   }
   &:hover {
     a {
@@ -39,13 +48,13 @@ const Coin = styled.li`
   }
 `;
 
-const Title = styled.h1`
+export const Title = styled.h1`
     font-size: 48px;
     color:${props => props.theme.accentColor}
 `
 
 
-type Cointypes = {
+export type Cointypes = {
     id: string,
     name: string,
     symbol: string,
@@ -76,7 +85,12 @@ function Coins() {
             {loading ? <Loader>Loading...</Loader> : <CoinsList>
                 {coins.map((coin) => (
                     <Coin key={coin.id}>
-                        <NavLink to={`/${coin.id}`}>{coin.name} &rarr;</NavLink>
+
+
+                        <NavLink to={`/${coin.id}`} state={{ name: coin.name }}>
+                            <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
+                            {coin.name} &rarr;</NavLink>
+
                     </Coin>
                 ))}
             </CoinsList>}
