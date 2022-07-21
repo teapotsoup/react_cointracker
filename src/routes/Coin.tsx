@@ -9,7 +9,27 @@ const Title = styled.h1`
   font-size: 48px;
   align-items: center;
 `;
-
+const Overview = styled.div`
+display: flex;
+justify-content: space-between;
+background-color: rgba(0, 0, 0, 0.5);
+padding: 10px 20px;
+border-radius: 10px;
+`;
+const OverviewItem = styled.div`
+display: flex;
+flex-direction: column;
+align-items: center;
+span:first-child {
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+`;
+const Description = styled.p`
+margin: 20px 0px;
+`;
 const Tabs = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -36,7 +56,7 @@ type RouteParams = {
     coinId: string
 }
 
-interface LocationState {
+type LocationState = {
     state: {
         name: string;
         rank: number;
@@ -44,7 +64,7 @@ interface LocationState {
 };
 
 
-interface InfoData {
+type InfoData = {
     id: string;
     name: string;
     symbol: string;
@@ -66,7 +86,7 @@ interface InfoData {
 }
 
 
-interface PriceData {
+type PriceData = {
     id: string;
     name: string;
     symbol: string;
@@ -100,7 +120,7 @@ interface PriceData {
     };
 
 }
-function Coin() {
+export default function Coin() {
     const [info, setInfo] = useState<InfoData>()
     const [priceInfo, setPriceInfo] = useState<PriceData>()
     const [loading, setLoading] = useState<boolean>(true)
@@ -122,27 +142,7 @@ function Coin() {
         getCoins();
 
     }, [coinId]);
-    const Overview = styled.div`
-    display: flex;
-    justify-content: space-between;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 10px 20px;
-    border-radius: 10px;
-  `;
-    const OverviewItem = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    span:first-child {
-      font-size: 10px;
-      font-weight: 400;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-    }
-  `;
-    const Description = styled.p`
-    margin: 20px 0px;
-  `;
+
     return (
         <Container>
             <Header>
@@ -194,4 +194,4 @@ function Coin() {
 
 }
 
-export default Coin
+ 
