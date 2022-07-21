@@ -1,13 +1,35 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Outlet, useLocation, useParams } from "react-router-dom"
+import { Link, Outlet, useLocation, useMatch, useParams } from "react-router-dom"
 import styled from "styled-components";
 import { Container, Header, Loader } from "./Coins";
 
 const Title = styled.h1`
   font-size: 48px;
   align-items: center;
+`;
+
+const Tabs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 25px 0px;
+  gap: 10px;
+`;
+
+const Tab = styled.span<{ isActive: boolean }>`
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 7px 0px;
+  border-radius: 10px;
+  color: ${(props) =>
+        props.isActive ? props.theme.accentColor : props.theme.textColor};
+  a {
+    display: block;
+  }
 `;
 
 type RouteParams = {
@@ -84,20 +106,21 @@ function Coin() {
     const [loading, setLoading] = useState<boolean>(true)
     const { coinId } = useParams<RouteParams>();
     const { state } = useLocation() as LocationState;
+    const priceMatch = useMatch("/:coinId/price");
+    const chartMatch = useMatch("/:coinId/chart");
+
 
     useEffect(() => {
         const getCoins = async () => {
             const res1 = await axios(`https://api.coinpaprika.com/v1/coins/${coinId}`);
             const res2 = await axios(`https://api.coinpaprika.com/v1/tickers/${coinId}`);
-            // console.log(res1.data)
-            // console.log(res2.data)
+
             setInfo(res1.data)
             setPriceInfo(res2.data)
             setLoading(false);
         };
         getCoins();
-        // console.log(info)
-        // console.log(priceInfo)
+
     }, [coinId]);
     const Overview = styled.div`
     display: flex;
@@ -155,6 +178,14 @@ function Coin() {
                             <span>{priceInfo?.max_supply}</span>
                         </OverviewItem>
                     </Overview>
+                    <Tabs>
+                        <Tab isActive={chartMatch !== null}>
+                            <Link to={`/${coinId}/chart`}>Chart</Link>
+                        </Tab>
+                        <Tab isActive={priceMatch !== null}>
+                            <Link to={`/${coinId}/price`}>Price</Link>
+                        </Tab>
+                    </Tabs>
                     <Outlet />
                 </>
             )}
