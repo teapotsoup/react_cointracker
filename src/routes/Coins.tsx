@@ -24,8 +24,8 @@ export const Loader = styled.h2`
     display:block
 `
 const Img = styled.img`
-    width:50px;
-    height:50px;
+    width:30px;
+    height:30px;
     margin-right: 10px;
 `
 const Coin = styled.li`
@@ -33,7 +33,7 @@ const Coin = styled.li`
   color: ${(props) => props.theme.bgColor};
   border-radius: 15px;
   margin-bottom: 10px;
-  padding:5px;
+
   display:flex;
   align-items: center;
   a {
@@ -50,7 +50,7 @@ const Coin = styled.li`
 `;
 
 export const Title = styled.h1`
-    font-size: 48px;
+    font-size: 35px;
     color:${props => props.theme.accentColor}
 `
 
@@ -71,18 +71,18 @@ function Coins() {
     <Container>
       <Helmet>
         <title>
-          코인 트래커
+          Coin Tracker
         </title>
       </Helmet>
       <Header>
-        <Title>코인</Title>
+        <Title>Coin Tracker</Title>
       </Header>
       {isLoading ? <Loader>Loading...</Loader> : <CoinsList>
         {data?.map((coin) => (
           <Coin key={coin.id}>
             <NavLink to={`/${coin.id}`} state={{ name: coin.name }}>
               <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
-              {coin.name} &rarr;</NavLink>
+              {coin.name}</NavLink>
           </Coin>
         ))}
       </CoinsList>}

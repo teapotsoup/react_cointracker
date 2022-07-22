@@ -68,7 +68,6 @@ export default function Chart() {
                             axisBorder: { show: false },
                             axisTicks: { show: false },
                             labels: { show: false },
-                            //datetimeFormatter: { month: "mmm 'yy" },
                             type: "datetime",
                             categories: data?.map((price) => Unix_timestamp(price.time_close)),
                         },
@@ -79,7 +78,7 @@ export default function Chart() {
                         colors: ["#0fbcf9"],
                         tooltip: {
                             y: {
-                                formatter: (value) => `$${value.toFixed(0)}`,
+                                formatter: (value:any) => `$${value.toFixed(0)}`,
                             },
                         },
                     }}
