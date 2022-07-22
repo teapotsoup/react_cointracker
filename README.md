@@ -7,4 +7,4 @@
   <li>axios</li>
   <li>react-dom-routerv6</li>
 </ul>
-![Animation7](https://user-images.githubusercontent.com/64897060/180441702-88b42baf-5cbb-4f71-be73-a2a4ebd94173.gif)
+<img width="80%" src="https://user-images.githubusercontent.com/64897060/180441886-8aea3fb5-ee3e-4412-b125-ea8e72b34fcb.gif"/>
