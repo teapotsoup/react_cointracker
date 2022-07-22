@@ -4,6 +4,11 @@ import { Link, Outlet, useLocation, useMatch, useParams } from "react-router-dom
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Container, Header, Loader } from "./Coins";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+const BackButton = styled.button`
+    border-radius:15px,
+`
 
 const Title = styled.h1`
   font-size: 48px;
@@ -139,6 +144,13 @@ export default function Coin() {
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
                 </title>
             </Helmet>
+            <FontAwesomeIcon icon={('user-secret')} />
+            <Link to={`/`}>
+                <BackButton>
+                    {'<<'}
+                </BackButton>
+            </Link>
+
             <Header>
                 <Title>
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
