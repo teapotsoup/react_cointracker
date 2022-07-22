@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
@@ -55,33 +56,38 @@ export const Title = styled.h1`
 
 
 export type Cointypes = {
-    id: string,
-    name: string,
-    symbol: string,
-    rank: number,
-    is_new: boolean,
-    is_active: boolean,
-    type: string,
+  id: string,
+  name: string,
+  symbol: string,
+  rank: number,
+  is_new: boolean,
+  is_active: boolean,
+  type: string,
 }
 
 function Coins() {
-    const { isLoading, data } = useQuery<Cointypes[]>(['allCoins'], fetchCoins)
-    return (
-        <Container>
-            <Header>
-                <Title>코인</Title>
-            </Header>
-            {isLoading ? <Loader>Loading...</Loader> : <CoinsList>
-                {data?.map((coin) => (
-                    <Coin key={coin.id}>
-                        <NavLink to={`/${coin.id}`} state={{ name: coin.name }}>
-                            <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
-                            {coin.name} &rarr;</NavLink>
-                    </Coin>
-                ))}
-            </CoinsList>}
-        </Container>
-    );
+  const { isLoading, data } = useQuery<Cointypes[]>(['allCoins'], fetchCoins)
+  return (
+    <Container>
+      <Helmet>
+        <title>
+          코인 트래커
+        </title>
+      </Helmet>
+      <Header>
+        <Title>코인</Title>
+      </Header>
+      {isLoading ? <Loader>Loading...</Loader> : <CoinsList>
+        {data?.map((coin) => (
+          <Coin key={coin.id}>
+            <NavLink to={`/${coin.id}`} state={{ name: coin.name }}>
+              <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
+              {coin.name} &rarr;</NavLink>
+          </Coin>
+        ))}
+      </CoinsList>}
+    </Container>
+  );
 }
 
 export default Coins

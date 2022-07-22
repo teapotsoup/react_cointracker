@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet"
 import { Link, Outlet, useLocation, useMatch, useParams } from "react-router-dom"
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
@@ -125,14 +126,19 @@ export default function Coin() {
     const { state } = useLocation() as LocationState;
     const priceMatch = useMatch("/:coinId/price");
     const chartMatch = useMatch("/:coinId/chart");
-    const { isLoading: infoLoding, data: infoData } = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId))//
+    const { isLoading: infoLoding, data: infoData } = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId), {
+        refetchInterval: 5000,
+    })//
     const { isLoading: tickersLoding, data: tickersData } = useQuery<PriceData>(["tickers", coinId], () => fetchCoinTickers(coinId))
-    console.log(infoData)
-    console.log(tickersData)
 
     const loading = infoLoding || tickersLoding
     return (
         <Container>
+            <Helmet>
+                <title>
+                    {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+                </title>
+            </Helmet>
             <Header>
                 <Title>
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
@@ -151,8 +157,8 @@ export default function Coin() {
                             <span>${infoData?.symbol}</span>
                         </OverviewItem>
                         <OverviewItem>
-                            <span>Open Source:</span>
-                            <span>{infoData?.open_source ? "Yes" : "No"}</span>
+                            <span>Price:</span>
+                            <span>${tickersData?.quotes.USD.price.toFixed(0)}</span>
                         </OverviewItem>
                     </Overview>
                     <Description>{infoData?.description}</Description>
