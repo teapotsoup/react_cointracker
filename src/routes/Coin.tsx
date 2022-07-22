@@ -1,8 +1,7 @@
-import axios from "axios";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, Outlet, useLocation, useMatch, useParams } from "react-router-dom"
 import styled from "styled-components";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Container, Header, Loader } from "./Coins";
 
 const Title = styled.h1`
@@ -121,33 +120,22 @@ type PriceData = {
 
 }
 export default function Coin() {
-    const [info, setInfo] = useState<InfoData>()
-    const [priceInfo, setPriceInfo] = useState<PriceData>()
-    const [loading, setLoading] = useState<boolean>(true)
-    const { coinId } = useParams<RouteParams>();
+
+    const { coinId = "" } = useParams<RouteParams>();
     const { state } = useLocation() as LocationState;
     const priceMatch = useMatch("/:coinId/price");
     const chartMatch = useMatch("/:coinId/chart");
+    const { isLoading: infoLoding, data: infoData } = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId))//
+    const { isLoading: tickersLoding, data: tickersData } = useQuery<PriceData>(["tickers", coinId], () => fetchCoinTickers(coinId))
+    console.log(infoData)
+    console.log(tickersData)
 
-
-    useEffect(() => {
-        const getCoins = async () => {
-            const res1 = await axios(`https://api.coinpaprika.com/v1/coins/${coinId}`);
-            const res2 = await axios(`https://api.coinpaprika.com/v1/tickers/${coinId}`);
-
-            setInfo(res1.data)
-            setPriceInfo(res2.data)
-            setLoading(false);
-        };
-        getCoins();
-
-    }, [coinId]);
-
+    const loading = infoLoding || tickersLoding
     return (
         <Container>
             <Header>
                 <Title>
-                    {state?.name ? state.name : loading ? "Loading..." : info?.name}
+                    {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
                 </Title>
             </Header>
 
@@ -156,26 +144,26 @@ export default function Coin() {
                     <Overview>
                         <OverviewItem>
                             <span>Rank:</span>
-                            <span>{info?.rank}</span>
+                            <span>{infoData?.rank}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Symbol:</span>
-                            <span>${info?.symbol}</span>
+                            <span>${infoData?.symbol}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Open Source:</span>
-                            <span>{info?.open_source ? "Yes" : "No"}</span>
+                            <span>{infoData?.open_source ? "Yes" : "No"}</span>
                         </OverviewItem>
                     </Overview>
-                    <Description>{info?.description}</Description>
+                    <Description>{infoData?.description}</Description>
                     <Overview>
                         <OverviewItem>
                             <span>Total Supply:</span>
-                            <span>{priceInfo?.total_supply}</span>
+                            <span>{tickersData?.total_supply}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Max Supply:</span>
-                            <span>{priceInfo?.max_supply}</span>
+                            <span>{tickersData?.max_supply}</span>
                         </OverviewItem>
                     </Overview>
                     <Tabs>
@@ -186,7 +174,7 @@ export default function Coin() {
                             <Link to={`/${coinId}/price`}>Price</Link>
                         </Tab>
                     </Tabs>
-                    <Outlet />
+                    <Outlet context={coinId} />
                 </>
             )}
         </Container>
@@ -194,4 +182,3 @@ export default function Coin() {
 
 }
 
- 

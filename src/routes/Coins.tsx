@@ -1,7 +1,7 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoins } from "../api";
 
 export const Container = styled.div`
   padding: 0px 20px;
@@ -65,25 +65,14 @@ export type Cointypes = {
 }
 
 function Coins() {
-
-    const [coins, setCoins] = useState<Cointypes[]>([])
-    const [loading, setLoading] = useState<boolean>(true)
-
-    const getCoins = async () => {
-        const res = await axios("https://api.coinpaprika.com/v1/coins");
-        setCoins(res.data.slice(0, 100));
-        setLoading(false);
-    };
-    useEffect(() => {
-        getCoins();
-    });
+    const { isLoading, data } = useQuery<Cointypes[]>(['allCoins'], fetchCoins)
     return (
         <Container>
             <Header>
                 <Title>코인</Title>
             </Header>
-            {loading ? <Loader>Loading...</Loader> : <CoinsList>
-                {coins.map((coin) => (
+            {isLoading ? <Loader>Loading...</Loader> : <CoinsList>
+                {data?.map((coin) => (
                     <Coin key={coin.id}>
                         <NavLink to={`/${coin.id}`} state={{ name: coin.name }}>
                             <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
